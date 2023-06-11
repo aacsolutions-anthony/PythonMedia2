@@ -8,81 +8,13 @@ Using python to control CVLC from the Python web app.py program
 ╚██╗ ██╔╝██║     ██║     
  ╚████╔╝ ███████╗╚██████╗
   ╚═══╝  ╚══════╝ ╚═════╝
-
   2.1 - May 2023
 
 AAC SOLUTIONS
 ANTHONY GRACE - WEEK 2 
 VERSION 2.1   
-Implementing a config.ini file to store the channel URLs
+Implementing a queue system 
 """
-import subprocess
-import configparser
-import shlex
-
-class VLCPlayer:
-    def __init__(self):
-        self.process = None
-
-    def play_media(self, media_path, channel_url):
-        # Split the VLC output string into parts
-        part1 = "#transcode{vcodec=h264,acodec=mpga,ab=128,channels=2,samplerate=44100,scodec=none}:rtp{dst="
-        part2 = ",port=5004,mux=ts}"
-    
-        # Combine the parts, inserting the channel_url in the middle
-        transcode_options = part1 + channel_url + part2
-
-        # Create the command string 
-        cmd = f'cvlc {media_path} --sout "{transcode_options}"'
-
-        # Use shlex.split to handle spaces in filenames and arguments correctly
-        cmd_list = shlex.split(cmd)
-
-        # Check if there is an existing process running
-        if self.process and self.process.poll() is None:
-            # Process is still running, terminate and wait for it to finish
-            self.process.terminate()
-            self.process.wait()
-
-        # Start the new process
-        self.process = subprocess.Popen(cmd_list)
-
-        return self.process
-
-    def stop_playback(self):
-        if self.process:
-            # Send SIGTERM to the process
-            self.process.terminate()
-            self.process.wait()
-            self.process = None
-
-class ChannelManager:
-    def __init__(self, player):
-        self.player = player
-        self.channels = {}
-
-    def select_channel(self, channel, file_path):
-        # Parse the config file
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-        channel_url = config.get('Channels', channel, fallback=None)
-
-        # Check if the channel URL is valid
-        if channel_url:
-            if channel in self.channels:
-                self.player.stop_playback()
-
-            self.channels[channel] = self.player.play_media(file_path, channel_url)
-            self.channels[channel].wait()  # Wait for the new process to start
-        else:
-            raise ValueError("Channel not found or unavailable")
-
-vlc_player = VLCPlayer()
-channel_manager = ChannelManager(vlc_player)
-
-'''
-QUEUEING SYSTEM TO DEBUG AND IMPLEMENT BEFORE PRODUCTION 
-
 import subprocess
 import configparser
 import shlex
@@ -126,20 +58,25 @@ class VLCPlayer:
         if self.process:
             # Send SIGTERM to the process
             self.process.terminate()
-            self.process.wait()
+            output, errors = self.process.communicate()
             self.process = None
 
     def kill_stream(self):
         if self.process:
             # Send SIGKILL to the process
             self.process.kill()
-            self.process.wait()
+            output, errors = self.process.communicate()
             self.process = None
 
     def clear_queue(self):
         self.queue = Queue()
+    #NEW
+    def get_queue(self):
+        queue_contents = list(self.queue.queue)
+        return queue_contents
 
 class ChannelManager:
+        
     def __init__(self, player):
         self.player = player
         self.channels = {}
@@ -162,9 +99,14 @@ class ChannelManager:
         else:
             # Handle the case when the channel is not found or unavailable
             raise ValueError("Channel not found or unavailable")
+    #NEW    
+    def get_current_playlists(self):
+        playlists = {}
+        for channel in self.channels:
+            playlists[channel] = self.player.get_queue()
+        return playlists
 
 vlc_player = VLCPlayer()
 channel_manager = ChannelManager(vlc_player)
 
 
-'''
