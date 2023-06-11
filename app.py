@@ -13,7 +13,7 @@ app.py version 32.5.1
 Using webflow to manage the front end. 
 Using Python to manage form submissions and VLC integration
 '''
-from flask import Flask, render_template, request, escape #redirect
+from flask import Flask, render_template, request, jsonify #redirect
 from werkzeug.utils import secure_filename
 import subprocess
 import os
@@ -23,11 +23,19 @@ import vlc_integration  # Assuming vlc_integration.py is in the same directory
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+# Create an instance of VLCPlayer and ChannelManager at the beginning
+vlc_player = vlc_integration.VLCPlayer()
+channel_manager = vlc_integration.ChannelManager(vlc_player)
+
+
+#INDEXING
+@app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-    # Render the index page for GET requests
     return render_template('index.html') 
+#INDEXING 
 
+#UPLOADING
 @app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
     if 'file-upload' in request.files:
@@ -38,44 +46,54 @@ def upload_file():
     
     return render_template('upload.html')
 
+#SERVING3.0
+
 @app.route('/contentmanager', methods=['GET', 'POST'])
 def content_manager():
     if request.method == 'POST':
-        channel = request.form.get('Channel-Selection') # form field name for channel selection is 'Channel-Selection'
-        file = secure_filename(request.form.get('File-Selection')) # form field name for file selection is 'File-Selection'
+        channel = request.form.get('Channel-Selection')
+        file = request.form.get('File-Selection')
 
-        # Perform any necessary validation and processing
         if not channel or not file:
-            return "Invalid selection. Please select both a channel and a file."
+            return jsonify(error="Invalid selection. Please select both a channel and a file."), 400
 
-        # Verify the channel
+        config = configparser.ConfigParser()
         try:
-            config = configparser.ConfigParser()
             config.read('config.ini')
             if not config.has_option('Channels', channel):
-                return "Invalid channel. Please select a valid channel."
+                print(channel)
+                return jsonify(error="Invalid channel. Please select a valid channel."), 400
+                
         except configparser.Error as e:
-            return "Error reading configuration file: " + str(e)
+            return jsonify(error="Error reading configuration file: " + str(e)), 500
 
-        # Call the VLC integration app with the selected channel and file
-        file_path = os.path.join('uploads', file) # Assuming 'uploads' directory
+        file_path = os.path.join('uploads', file)
+        if not os.path.isfile(file_path):
+            return jsonify(error="File not found: " + file), 404
+
         try:
-            vlc_integration.VLCPlayer.select_channel(channel)
-            subprocess.run(['python3', 'vlc_integration.py', '--file', file_path])
-        except Exception as e:
-            return "Error initiating streaming: " + str(e)
+            channel_manager.select_channel(channel, file_path)
+        except subprocess.CalledProcessError as e:
+            return jsonify(error="Error initiating streaming: " + str(e)), 500
 
-        # Optionally, you can provide a success message or redirect to another page
-        return "Streaming initiated for channel {} with file {}".format(escape(channel), escape(file))
 
-    # Get the list of files in the uploads directory for GET requests
-    files = os.listdir('uploads') # Assuming 'uploads' directory
+    files = os.listdir('uploads')
     return render_template('contentmanager.html', files=files)
 
+# Switch flask.escape module for deployment to prevent depracated and broken features 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8088, debug=False)
+    app.run(host='0.0.0.0', port=8088, debug=True)
+'''
+# Turn off debug mode for production 
+# Use production WSGI server for deployment
+    #Wrap server in a production WSGI server such as gunicorn
+https://gunicorn.org/
+'''
 
 '''
+At 1100 on 05/06/2023 Snyk and AWS scanning returned ZERO errors or vulnerabilities. 
+Version 1.0 of full basic functionality is ready for further deployment testing upon CMND hardware. 
+
 VULN1: 
 Cross-site Scripting (XSS): Unsanitized input from a web form flows into the return value of content...
 CWE-20,79,80 - Cross-site scripting: User-controllable input must be sanitized before it's included in output used to dynamically generate a web page. Unsanitized user input can introduce cross-side scripting (XSS) vulnerabilities that can lead to inadvertedly running malicious code in a trusted context.
