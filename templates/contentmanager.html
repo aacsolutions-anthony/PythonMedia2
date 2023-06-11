@@ -77,6 +77,15 @@
                 </select>
                     <input type="submit" value="Play" data-wait="Please wait..." class="submit-button w-button"/>
                 </form>
+            <h2 class="heading-7">Current Playlists: </h2>
+            {% for channel, files in playlists.items() %}
+            <h3>{{ channel }}</h3>
+            <ul>
+                {% for file in files %}
+            <li>{{ file }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
 
             <div class="form-block w-form">
                 <div class="w-form-done"><div>Thank you! Your request has been received!</div></div>
