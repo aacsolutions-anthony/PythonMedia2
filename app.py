@@ -1,113 +1,110 @@
-"""
-vlc_integration.py
-VLC Controller 
-Using python to control CVLC from the Python web app.py program 
-██╗   ██╗██╗      ██████╗
-██║   ██║██║     ██╔════╝
-██║   ██║██║     ██║     
-╚██╗ ██╔╝██║     ██║     
- ╚████╔╝ ███████╗╚██████╗
-  ╚═══╝  ╚══════╝ ╚═════╝
-  2.1 - May 2023
-
-AAC SOLUTIONS
-ANTHONY GRACE - WEEK 2 
-VERSION 2.1   
-Implementing a queue system 
-"""
+'''
+███████╗██╗      █████╗ ███████╗██╗  ██╗
+██╔════╝██║     ██╔══██╗██╔════╝██║ ██╔╝
+█████╗  ██║     ███████║███████╗█████╔╝ 
+██╔══╝  ██║     ██╔══██║╚════██║██╔═██╗ 
+██║     ███████╗██║  ██║███████║██║  ██╗
+╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+'''
+'''
+AAC Solutions 
+Anthony Grace 
+app.py version 32.5.1
+Using webflow to manage the front end. 
+Using Python to manage form submissions and VLC integration
+'''
+from flask import Flask, render_template, request, jsonify #redirect
+from werkzeug.utils import secure_filename
 import subprocess
+import os
 import configparser
-import shlex
-from queue import Queue
+import vlc_integration  # Assuming vlc_integration.py is in the same directory
 
-class VLCPlayer:
-    def __init__(self):
-        self.process = None
-        self.queue = Queue()
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
-    def play_media(self, media_path, channel_url):
-        # Split the VLC output string into parts
-        part1 = "#transcode{vcodec=h264,acodec=mpga,ab=128,channels=2,samplerate=44100,scodec=none}:rtp{dst="
-        part2 = ",port=5004,mux=ts}"
+# Create an instance of VLCPlayer and ChannelManager at the beginning
+vlc_player = vlc_integration.VLCPlayer()
+channel_manager = vlc_integration.ChannelManager(vlc_player)
+
+
+#INDEXING
+@app.route('/', methods=['GET'])
+@app.route('/index', methods=['GET'])
+def index():
+    return render_template('index.html') 
+#INDEXING 
+
+#UPLOADING
+@app.route('/upload', methods=['POST', 'GET'])
+def upload_file():
+    if 'file-upload' in request.files:
+        uploaded_file = request.files['file-upload']
+        if uploaded_file.filename != '':
+            filename = secure_filename(uploaded_file.filename)
+            uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     
-        # Combine the parts, inserting the channel_url in the middle
-        transcode_options = part1 + channel_url + part2
+    return render_template('upload.html')
 
-        # Create the command string
-        cmd = f'cvlc {media_path} --sout "{transcode_options}"'
+#SERVING3.0
 
-        # Use shlex.split to handle spaces in filenames and arguments correctly
-        cmd_list = shlex.split(cmd)
+@app.route('/contentmanager', methods=['GET', 'POST'])
+def content_manager():
 
-        # Check if there is an existing process running
-        if self.process and self.process.poll() is None:
-            # Process is still running, enqueue the media file
-            self.queue.put((media_path, channel_url))
-        else:
-            # Start the new process
-            self.process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if request.method == 'POST':
+        channel = request.form.get('Channel-Selection')
+        file = request.form.get('File-Selection')
 
-            # Check if there are any media files in the queue
-            if not self.queue.empty():
-                media_path, channel_url = self.queue.get()
-                self.play_media(media_path, channel_url)
+        if not channel or not file:
+            return jsonify(error="Invalid selection. Please select both a channel and a file."), 400
 
-        return self.process
-
-    def stop_playback(self):
-        if self.process:
-            # Send SIGTERM to the process
-            self.process.terminate()
-            output, errors = self.process.communicate()
-            self.process = None
-
-    def kill_stream(self):
-        if self.process:
-            # Send SIGKILL to the process
-            self.process.kill()
-            output, errors = self.process.communicate()
-            self.process = None
-
-    def clear_queue(self):
-        self.queue = Queue()
-    #NEW
-    def get_queue(self):
-        queue_contents = list(self.queue.queue)
-        return queue_contents
-
-class ChannelManager:
-        
-    def __init__(self, player):
-        self.player = player
-        self.channels = {}
-
-    def select_channel(self, channel, file_path):
-        # Parse the config file
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        try:
+            config.read('config.ini')
+            if not config.has_option('Channels', channel):
+                print(channel)
+                return jsonify(error="Invalid channel. Please select a valid channel."), 400
+                
+        except configparser.Error as e:
+            return jsonify(error="Error reading configuration file: " + str(e)), 500
 
-        # Get the channel url
-        channel_url = config.get('Channels', channel, fallback=None)
+        file_path = os.path.join('uploads', file)
+        if not os.path.isfile(file_path):
+            return jsonify(error="File not found: " + file), 404
 
-        # Check if the channel URL is valid
-        if channel_url:
-            if channel in self.channels:
-                self.player.stop_playback()
+        try:
+            channel_manager.select_channel(channel, file_path)
+        except subprocess.CalledProcessError as e:
+            return jsonify(error="Error initiating streaming: " + str(e)), 500
 
-            self.channels[channel] = self.player.play_media(file_path, channel_url)
-            self.channels[channel].wait()  # Wait for the new process to start
-        else:
-            # Handle the case when the channel is not found or unavailable
-            raise ValueError("Channel not found or unavailable")
-    #NEW    
-    def get_current_playlists(self):
-        playlists = {}
-        for channel in self.channels:
-            playlists[channel] = self.player.get_queue()
-        return playlists
+    files = os.listdir('uploads')
+    #NEW
+    playlists = channel_manager.get_current_playlists()
+    return render_template('contentmanager.html', files=files, playlists=playlists)
 
-vlc_player = VLCPlayer()
-channel_manager = ChannelManager(vlc_player)
+'''
+    files = os.listdir('uploads')
+    return render_template('contentmanager.html', files=files)
+'''
 
+# Switch flask.escape module for deployment to prevent depracated and broken features 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8088, debug=True)
+'''
+# Turn off debug mode for production 
+# Use production WSGI server for deployment
+    #Wrap server in a production WSGI server such as gunicorn
+https://gunicorn.org/
+'''
 
+'''
+At 1100 on 05/06/2023 Snyk and AWS scanning returned ZERO errors or vulnerabilities. 
+Version 1.0 of full basic functionality is ready for further deployment testing upon CMND hardware. 
 
+VULN1: 
+Cross-site Scripting (XSS): Unsanitized input from a web form flows into the return value of content...
+CWE-20,79,80 - Cross-site scripting: User-controllable input must be sanitized before it's included in output used to dynamically generate a web page. Unsanitized user input can introduce cross-side scripting (XSS) vulnerabilities that can lead to inadvertedly running malicious code in a trusted context.
+
+VULN2: 
+Debug mode enabled. 
+'''
