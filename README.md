@@ -249,14 +249,55 @@ Run the app:
 python app.py
 ```
 The PythonMedia2 application is now running and accessible at http://localhost:8088.
-Usage
+
+## Usage:
+
+Accessible in the web UI of your local IP address followed by port 8088
+
+Flask route set to root. 
+
+example - http://192.168.1.0:8088/
+
+## Find your internal IP: 
+
+### Windows 
+
+Open Command Prompt or PowerShell and enter command: 
+
+```
+ipconfig 
+```
+find your interface and the link/local ipv4 address. 
+
+### Ubuntu & GNU/Linux
+
+Open a konsole / terminal: 
+
+```
+ip a 
+```
+or 
+```
+ifconfig
+```
+
+### Example URL: 
+protocol://IPaddress:port
+
+http://192.168.1.157:8088
 
 After starting the PythonMedia2 application, you can access it through your web browser at http://localhost:8088. From there, you can upload media files, manage content, and start streaming.
 
 Remember to add a config.ini file to the project directory. This file is needed by the application to function properly. Please refer to the vlc_integration.py file for more details on how to set up this file.
-Troubleshooting
+
+
+## Troubleshooting;
 
 If you encounter any problems during the installation or use of PythonMedia2, please open an issue in the GitHub repository.
+
+Under open dev build, the client is permitted to edit the software to debug mode as specified in the app.py file. 
+
+Though this is not recommended by clients and should be hanndled by AAC Solutons technical support through a VPN/ SSH. 
 
 Enjoy using PythonMedia2!
 
