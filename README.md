@@ -19,14 +19,13 @@ PythonMedia2 is a powerful Python-based media streaming application. It provides
 4. [How It works](#howitWorks)
 5. [Conclusion](#conclusion)
 6. [Download Contents](#download)
-7. [Docker Install](#dockerinstall)
-8. [Project Installation with Docker](#projectinstall)
-9. [Project Installation with Git](#standaloneinstall)
+7. [Install Docker App](#dockerinstall)
+8. [Install Project with Docker](#projectinstall)
+9. [Install project with Git (Alternative)](#standaloneinstall)
 10. [Usage](#usage)
 11. [Troubleshooting](#troubleshooting)
 12. [Legal Disclosure](#legal)
 13. [Warranty and License](#warranty)
-
 
 
 ## Features <a name="features"> </a>
