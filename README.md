@@ -44,8 +44,10 @@ PythonMedia2 is a powerful Python-based media streaming application. It provides
 6. Docker Support: For ease of deployment, the application comes with Docker support. Users can quickly get the system up and running using Docker containers, which ensure consistent behavior across different platforms.
 
 ---
+
 ![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/9b0c2269-a5ac-43fc-8c95-7060697d2981)
 ![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/59d02746-8911-402a-809b-9bae1f4685ee)
+
 ---
 
 ## Python Dependencies <a name ="python-dependencies"> </a>
