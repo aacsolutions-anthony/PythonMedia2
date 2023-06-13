@@ -112,15 +112,15 @@ PythonMedia2 is a capable media streaming application that provides a straightfo
 
 Clone the project Repository: Open a terminal, navigate to the location where you'd like to store your project, and clone your repository using the command:
 
-## Install git
+## Install Git
 
 *The Prefered Method is Modifiable to suit your usual package manager
 
 ### Windows 
 
-```
-Head to Git and install the installer executable 
-```
+Head to the dowwnloads page on Git and download the installer executable for Windows 10/11
+
+Link to download page: https://git-scm.com/downloads
 
 ### Ubuntu & GNU/Linuc
 
@@ -395,4 +395,4 @@ The developer holds no warranty or copyright claims over the streamed content or
 For the sake of the argument: All references to GNU / Linux and Ubuntu declares that; GNU/Linux and Ubuntu based systems are recommended for this install. 
 Developer note !!: 
 > Any Linux distribution which adopts LTS, FOSS-builds,and Stable release models. 
-> APT pakage manager recommened as build and install scripts are ased around this. https://git-scm.com/downloads
+> APT pakage manager recommened as build and install scripts are ased around this. 
