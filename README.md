@@ -77,9 +77,31 @@ Here are a few enhancements that could be made in the future:
 PythonMedia2 is a capable media streaming application that provides a straightforward way for users to stream their media content in a lightweight and streamlined environment.
 
 
-# Install Docker Desktop:
+# Download Project contents:
+
+Clone the project Repository: Open a terminal, navigate to the location where you'd like to store your project, and clone your repository using the command:
+
+## Install git 
+```
+VIA YOUR PREFERRED METHOD
+```
+## Project contents Git Clone: 
+
+*powershell or bash*
+
+```
+git clone https://github.com/aacsolutions-anthony/PythonMedia2.git
+```
 
 Download Docker Desktop for Windows from the official Docker website. Double-click the Docker Desktop Installer to run the installer. It's a straightforward wizard - just keep clicking "Next" until the installation is complete.
+
+# Install Docker 
+
+## Change DIR to installers 
+
+```
+cd docker_installers
+```
 
 ## GNU/Linux Install (BASH)
 
@@ -93,15 +115,6 @@ Download Docker Desktop for Windows from the official Docker website. Double-cli
 ./install.ps1
 ```
 
-
-Clone the Repository: Open a terminal, navigate to the location where you'd like to store your project, and clone your repository using the command:
-
-*powershell or bash*
-
-
-```
-git clone https://github.com/aacsolutions-anthony/PythonMedia2.git
-```
 
 # PythonMedia2
 
