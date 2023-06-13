@@ -113,9 +113,21 @@ PythonMedia2 is a capable media streaming application that provides a straightfo
 Clone the project Repository: Open a terminal, navigate to the location where you'd like to store your project, and clone your repository using the command:
 
 ## Install git
+
+*The Prefered Method is Modifiable to suit your usual package manager
+
+### Windows 
+
 ```
-VIA YOUR PREFERRED METHOD
+Head to Git and install the installer executable 
 ```
+
+### Ubuntu & GNU/Linuc
+
+```
+sudo apt update -y && install git 
+```
+
 ## Project contents Git Clone:
 
 *powershell or bash*
@@ -134,7 +146,7 @@ Download Docker Desktop for Windows from the official Docker website. Double-cli
 cd docker_installers
 ```
 
-## GNU/Linux Install (BASH)
+## Ubuntu & GNU/Linux Install (BASH)
 
 ```
 ./install.sh
@@ -147,7 +159,7 @@ cd docker_installers
 ```
 # Install main project
 
-PythonMedia2 is a Python-based application for media streaming. This section provides comprehensive instructions on installing the application with Docker as well as installing it as a standalone application with Git on both Windows and Ubuntu.
+PythonMedia2 is a Python-based application for media streaming. This section provides comprehensive instructions on installing the application with Docker as well as installing it as a standalone application with Git on both Windows and Linux.
 
 ## Prerequisites:
 
@@ -198,9 +210,9 @@ Further debugging could be required *
 
 ## Installation with Git (Standalone App) <a name="standaloneinstall"> </a>
 
-### On Ubuntu
-
-Follow these steps to install PythonMedia2 on Ubuntu as a standalone app.
+### For Ubuntu && GNU/Linux
+ 
+Follow these steps to install PythonMedia2 on Linux Systems as a standalone app.
 
 Install VLC:
 
@@ -245,7 +257,11 @@ The PythonMedia2 application is now running and accessible at http://localhost:8
 ### On Windows:
 
 Follow these steps to install PythonMedia2 on Windows as a standalone app. You'll need to have Python and Git installed.
-**(NOT RECOMMENDED, WINDOWS INSTALL BUILT WITH DOCKER IN MIND)**
+
+**(NOT RECOMMENDED, WINDOWS INSTALL IS BUILT WITH DOCKER IN MIND)**
+
+**(WINDOWS IS WHY DOCKER IS SUPPORTED HERE)**
+
 Install VLC: You can download it from the official VLC website. After downloading, follow the instructions to install it.
 Clone the repository: Open a command prompt, navigate to the directory where you want to clone the repository, and run:
 
@@ -375,3 +391,8 @@ Issues can also be emailed for remote fixes for select clients. Exclusions apply
 It should be noted that the developer, development company shall not be held liable for the content which is streamed using this software.
 The developer holds no warranty or copyright claims over the streamed content or content uploaded by the clients, users, and stakeholders.
 
+## Side notes on operating system environment
+For the sake of the argument: All references to GNU / Linux and Ubuntu declares that; GNU/Linux and Ubuntu based systems are recommended for this install. 
+Developer note !!: 
+> Any Linux distribution which adopts LTS, FOSS-builds,and Stable release models. 
+> APT pakage manager recommened as build and install scripts are ased around this. https://git-scm.com/downloads
