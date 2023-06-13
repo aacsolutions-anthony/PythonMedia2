@@ -327,12 +327,12 @@ Below is the automated install method. These special install scripts are located
 
 ### Automated Windows Install (PS)
 Clone the repository: (Git must be installed, or download and extract the ZIP file above) 
-(Skip if already donw) [Skip](step2W)
+(Skip if already donw) [Skip to Windows](step2w)
 
 ```
 git clone https://github.com/aacsolutions-anthony/PythonMedia2
 ```
-Change into DIR <a name="step2W"> </a>
+Change into DIR <a name="step2w"> </a>
 
 ```
 cd PythonMedia2
@@ -346,7 +346,7 @@ Run installer
 ### Automated Ubuntu & GNU / Linux Install (BASH) 
 
 Clone the repository: (Git must be installed, or download the tarball file above) 
-(Skip if already done) [Skip](#step2U)
+(Skip if already done) [Skip to Ubuntu](#step2U)
 
 ```
 git clone https://github.com/aacsolutions-anthony/PythonMedia2
