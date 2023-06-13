@@ -22,10 +22,11 @@ PythonMedia2 is a powerful Python-based media streaming application. It provides
 7. [Install Docker App](#dockerinstall)
 8. [Install Project with Docker](#projectinstall)
 9. [Install project with Git (Alternative)](#standaloneinstall)
-10. [Usage](#usage)
-11. [Troubleshooting](#troubleshooting)
-12. [Legal Disclosure](#legal)
-13. [Warranty and License](#warranty)
+10. [Automated Install Method (Alternative)](#automatedinstall) 
+11. [Usage](#usage)
+12. [Troubleshooting](#troubleshooting)
+13. [Legal Disclosure](#legal)
+14. [Warranty and License](#warranty)
 
 
 ## Features <a name="features"> </a>
@@ -320,6 +321,48 @@ or
 ```
 ifconfig
 ```
+## Automated Install
+
+Below is the automated install method. These special install scripts are located in the root directory. 
+
+### Automated Windows Install (PS)
+Clone the repository: (Git must be installed, or download and extract the ZIP file above) 
+(Skip if already donw) [Skip](step2W)
+
+```
+git clone https://github.com/aacsolutions-anthony/PythonMedia2
+```
+Change into DIR <a name="step2W"> </a>
+
+```
+cd PythonMedia2
+```
+Run installer 
+
+```
+./autoinstallwindows.ps1
+```
+
+### Automated Ubuntu & GNU / Linux Install (BASH) 
+
+Clone the repository: (Git must be installed, or download the tarball file above) 
+(Skip if already done) [Skip](#step2U)
+
+```
+git clone https://github.com/aacsolutions-anthony/PythonMedia2
+```
+Change into DIR <a name="step2U"> </a>
+
+```
+cd PythonMedia2
+```
+
+Run installer 
+
+```
+./automatedinstalllinux.sh
+```
+
 
 ### Example URL:
 protocol://IPaddress:port
