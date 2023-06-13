@@ -6,6 +6,9 @@
 
 Open Development Branch. (GPL3.0) 
 
+This software is: 
+
+*modular, secure, open* - From its foundation. 
 
 PythonMedia2 is a powerful Python-based media streaming application. It provides a streamlined, user-friendly interface for managing and streaming media content. The system is built to operate smoothly across different platforms, providing a universal solution to your media streaming needs.
 Features
@@ -325,6 +328,23 @@ No Warranty, No liability, Open use and modification under full disclosure.
 This software comes with absolutely no warranty.
 
 In selected environments and client deployments, remote support is available and issues can be posted via the issues section in Git towards the main branch.
+
+PythonMedia2 by AAC Solutions / Australia Copyright: (C) 2023 / Anthony Grace 
+Providing a modular, open, and secure streaming solution for AAC Solutions Clients 
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 
 Patch and update branches should not and will not be deployed to client systems.
 
