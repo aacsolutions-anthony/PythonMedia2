@@ -24,8 +24,6 @@ Features
 
 ![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/9b0c2269-a5ac-43fc-8c95-7060697d2981)
 ![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/59d02746-8911-402a-809b-9bae1f4685ee)
-![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/b36f443a-f93e-4b90-bc8c-e2b4b50aaf62)
-
 
 ## Python Dependencies
 
