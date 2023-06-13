@@ -82,7 +82,7 @@ def content_manager():
 
 # Switch flask.escape module for deployment to prevent depracated and broken features 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8088, debug=True)
+    app.run(host='0.0.0.0', port=8088, debug=False)
 '''
 # Turn off debug mode for production 
 # Use production WSGI server for deployment
