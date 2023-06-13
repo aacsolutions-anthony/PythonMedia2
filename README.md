@@ -1,6 +1,11 @@
 
 # PythonMedia2
 
+![image](https://github.com/aacsolutions-anthony/PythonMedia2/assets/131961269/2c1576a8-e769-4d82-9547-1596494ecd61)
+
+
+Open Development Branch. (GPL3.0) 
+
 
 PythonMedia2 is a powerful Python-based media streaming application. It provides a streamlined, user-friendly interface for managing and streaming media content. The system is built to operate smoothly across different platforms, providing a universal solution to your media streaming needs.
 Features
@@ -114,11 +119,9 @@ cd docker_installers
 ```
 ./install.ps1
 ```
+# Install main project 
 
-
-# PythonMedia2
-
-PythonMedia2 is a Python-based application for media streaming. This README provides comprehensive instructions on installing the application with Docker as well as installing it as a standalone application with Git on both Windows and Ubuntu.
+PythonMedia2 is a Python-based application for media streaming. This section provides comprehensive instructions on installing the application with Docker as well as installing it as a standalone application with Git on both Windows and Ubuntu.
 
 ## Prerequisites:
 
@@ -133,16 +136,21 @@ PythonMedia2 is a Python-based application for media streaming. This README prov
 
 **Works on all systems**
 
-Clone the repository:
+Clone the repository if not done so already:
 
 ```
 git clone https://github.com/aacsolutions-anthony/PythonMedia2.git
 ```
 
-Change into the directory:
+Change into the root of Git branch:
 
 ```
 cd PythonMedia2
+```
+OR (if in DIR)
+
+```
+cd .. 
 ```
 
 Build the Docker image:
@@ -251,10 +259,23 @@ If you encounter any problems during the installation or use of PythonMedia2, pl
 Enjoy using PythonMedia2!
 
 
-# LEGAL
+# LEGAL PARAMETERS
 
+PythonMedia2 Copyright (C) 2023  Anthony Joseph Grace @ AAC Solutions
+
+https://www.aacsolutions.com.au/
+
+This program comes with ABSOLUTELY NO WARRANTY;
+This initial build is free software, and you are welcome to redistribute it
+under certain conditions.
 
 ## Licensing
+
+See LICENSE in the root of the main branch.
+
+GPL 3.0 Licence. 
+
+No Warranty, No liability, Open use and modification under full disclosure. 
 
 
 ## Warranty
