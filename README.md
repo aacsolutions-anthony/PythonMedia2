@@ -388,7 +388,7 @@ Enjoy using PythonMedia2!
 
 # LEGAL PARAMETERS <a name="legal"> </a>
 
-PythonMedia2 Copyright (C) 2023  Anthony Joseph Grace @ AAC Solutions
+PythonMedia2 Copyright (C) 2023  Anthony Grace @ AAC Solutions
 
 https://www.aacsolutions.com.au/
 
