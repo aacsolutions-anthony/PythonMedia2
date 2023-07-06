@@ -14,7 +14,7 @@ COPY . /app
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Make port 8088 available to the world outside this container
-# Changed from port 8000 to 8088 because your app runs on port 8088
+# Changed from port 80 to 8088 because your app runs on port 8088
 EXPOSE 8088
 
 # Create uploads directory for file uploads in the app
