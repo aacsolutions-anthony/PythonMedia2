@@ -1,0 +1,8 @@
+changed app.py 
+changed vlc_integration.py 
+
+Front end not canged 
+Using matts front end, have to seperate the two versions
+One with channels and another with multiple channels, security hardening, REACT.js etc etc. 
+
+

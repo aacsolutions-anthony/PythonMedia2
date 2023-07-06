@@ -9,15 +9,20 @@
 '''
 AAC Solutions 
 Anthony Grace 
-app.py version 32.5.3
-Using webflow to manage the front end. 
-Using Python to manage form submissions and VLC integration
+app.py version 35
+ASSUMING ONE CHANNEL
+
+Changes made to the original Flask app:
+
+    Removed the channel-related logic from the content_manager function since the new version of vlc_integration.py assumes that there's only one channel.
+    The channel parameter has been removed from the calls to channel_manager.select_channel(), channel_manager.add_to_queue(), and channel_manager.clear_queue().
+    channel_manager.get_current_playlists() has been replaced with channel_manager.get_current_playlist(), and the playlists variable has been replaced with playlist.
+
 '''
-from flask import Flask, render_template, request, jsonify #redirect
+from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
-import subprocess
 import os
-import configparser
+import subprocess
 import vlc_integration  # Assuming vlc_integration.py is in the same directory
 
 app = Flask(__name__)
@@ -27,15 +32,31 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 vlc_player = vlc_integration.VLCPlayer()
 channel_manager = vlc_integration.ChannelManager(vlc_player)
 
+#REDIRECTS AND ADDITION:
+@app.route('/Home.html', methods=['GET'])
+def redirect_home():
+    return redirect(url_for('index'), code=302)
 
-#INDEXING
+@app.route('/Content-Manager.html', methods=['GET', 'POST'])
+def redirect_content():
+    return redirect(url_for('content_manager'), code=302)
+
+@app.route('/Upload.html', methods=['GET', 'POST'])
+def redirect_upload():
+    return redirect(url_for('upload_file'), code=302)
+
+@app.route('/Contact-Us.html' , methods=['GET'])
+def contactus():
+    return redirect(url_for('contact-us'), code=302)
+#Back end patch /\
+#Add in more redirects or fix the HTML links from the front end.
+
+#EXISTING:
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-    return render_template('index.html') 
-#INDEXING 
+    return render_template('Home.html')
 
-#UPLOADING
 @app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
     if 'file-upload' in request.files:
@@ -43,61 +64,40 @@ def upload_file():
         if uploaded_file.filename != '':
             filename = secure_filename(uploaded_file.filename)
             uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    
-    return render_template('upload.html')
 
-#SERVING3.0
+    return render_template('Upload.html')
 
 @app.route('/contentmanager', methods=['GET', 'POST'])
 def content_manager():
     if request.method == 'POST':
-        channel = request.form.get('Channel-Selection')
         file = request.form.get('File-Selection')
+        action = request.form.get('action')
 
-        if not channel or not file:
-            return jsonify(error="Invalid selection. Please select both a channel and a file."), 400
+        if not file:
+            return jsonify(error="Invalid selection. Please select a file."), 400
 
-        config = configparser.ConfigParser()
-        try:
-            config.read('config.ini')
-            if not config.has_option('Channels', channel):
-                print(channel)
-                return jsonify(error="Invalid channel. Please select a valid channel."), 400
-                
-        except configparser.Error as e:
-            return jsonify(error="Error reading configuration file: " + str(e)), 500
-
-        file_path = os.path.join('uploads', file)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file)
         if not os.path.isfile(file_path):
             return jsonify(error="File not found: " + file), 404
 
-        try:
-            channel_manager.select_channel(channel, file_path)
-        except subprocess.CalledProcessError as e:
-            return jsonify(error="Error initiating streaming: " + str(e)), 500
+        if action == 'Play':
+            try:
+                channel_manager.select_channel(file_path)
+            except subprocess.CalledProcessError as e:
+                return jsonify(error="Error initiating streaming: " + str(e)), 500
+        elif action == 'Add to Queue':
+            channel_manager.add_to_queue(file_path)
+        elif action == 'Clear Queue':
+            channel_manager.clear_queue()
 
+    files = os.listdir(app.config['UPLOAD_FOLDER'])
+    playlist = channel_manager.get_current_playlist()
+    return render_template('Content-Manager.html', files=files, playlist=playlist)
 
-    files = os.listdir('uploads')
-    return render_template('contentmanager.html', files=files)
+@app.route('/contact-us' , methods=['GET']) 
+def contactus():
+    return render_template('Contact-Us.html')
 
-# Switch flask.escape module for deployment to prevent depracated and broken features 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8088, debug=False)
-'''
-# Turn off debug mode for production 
-# Use production WSGI server for deployment
-    #Wrap server in a production WSGI server such as gunicorn
-https://gunicorn.org/
-'''
-
-'''
-At 1100 on 05/06/2023 Snyk and AWS scanning returned ZERO errors or vulnerabilities. 
-Version 1.0 of full basic functionality is ready for further deployment testing upon CMND hardware. 
-
-VULN1: 
-Cross-site Scripting (XSS): Unsanitized input from a web form flows into the return value of content...
-CWE-20,79,80 - Cross-site scripting: User-controllable input must be sanitized before it's included in output used to dynamically generate a web page. Unsanitized user input can introduce cross-side scripting (XSS) vulnerabilities that can lead to inadvertedly running malicious code in a trusted context.
-
-VULN2: 
-Debug mode enabled. 
-'''
+    
+    app.run(host='0.0.0.0', port=8088, debug=True)
