@@ -1,0 +1,67 @@
+IMPLEMENT THE FOLLOWING UPDATES TOMORROW TO FIX THE QUEUE SYSTEM 
+
+KEEP THE BUTTON HANDLING INSIDE THE SAME FLASK ROUTE!! 
+
+The vlc threading has beed daemonised, pros and cons to each, might be slightly less compatibility or rigidity, thus a docker container and testing phase has been implemented 
+
+Onto final touches and tweaking of the system and deployment method. Almost finished this one!!! 
+
+
+<!-- @@@@@ FILE SELECTION FORM -->
+<form id="content-manager-form" name="content-manager-form" data-name="Content Manager Form" action="/Content-Manager.html" method="post" class="form">
+    <select id="File-Selection" name="File-Selection" data-name="File Selection" required="" class="select-field w-select">
+        <option value="">File Selection</option>
+
+        {% for file in files %}
+        <option value="{{ file }}">{{ file }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" name="action" value="Play" data-wait="Please wait..." class="submit-button w-button"/>
+    <input type="submit" name="action" value="Add to Queue" data-wait="Please wait..." class="submit-button w-button"/>
+    <input type="submit" name="action" value="Clear Queue" data-wait="Please wait..." class="submit-button w-button"/>
+</form>
+
+<!--@@@@@@@ QUEUE SYSTEM FORM BLOCK  -->
+<h2 class="heading-7">Current Queue: </h2>
+<ul>
+{% for file in playlist %}
+<li>{{ file }}</li>
+{% endfor %}
+</ul>
+<div class="form-block w-form">
+    <div class="w-form-done"><div>Thank you! Your request has been received!</div></div>
+    <div class="w-form-fail"><div>Oops.. Something went wrong.</div></div>
+</div>
+
+
+@app.route('/Content-Manager.html', methods=['GET', 'POST'])  # Update the route to match the URL
+def content_manager():
+    if request.method == 'POST':
+        file = request.form.get('File-Selection')
+        action = request.form.get('action')
+
+        if action != 'Clear Queue' and not file:
+            return jsonify(error="Invalid selection. Please select a file."), 400
+
+        file_path = None
+        if file:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file)
+            if not os.path.isfile(file_path):
+                return jsonify(error="File not found: " + file), 404
+
+        if action == 'Play':
+            try:
+                channel_manager.select_channel(file_path)
+            except subprocess.CalledProcessError as e:
+                return jsonify(error="Error initiating streaming: " + str(e)), 500
+        elif action == 'Add to Queue':
+            channel_manager.add_to_queue(file_path)
+        elif action == 'Clear Queue':
+            channel_manager.clear_queue()
+
+    files = os.listdir(app.config['UPLOAD_FOLDER'])
+    playlist = channel_manager.get_current_playlist()
+    return render_template('Content-Manager.html', files=files, playlist=playlist)
+
+
+
